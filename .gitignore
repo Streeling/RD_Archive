@@ -4,30 +4,22 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle/wrapper/gradle-wrapper.jar
+
+# Avoid ignore Gradle wrappper properties
+!gradle/wrapper/gradle-wrapper.properties
+
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+.idea/
+!.idea/.name
+!.idea/vcs.xml
 *.iws
 *.iml
 *.ipr
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-
-# Gradle
-.idea/**/gradle.xml
-.idea/**/libraries
-
-# Gradle with auto-import
-.idea/artifacts
-.idea/jarRepositories.xml
-.idea/modules
-.idea/misc.xml
-
-# SonarLint plugin
-.idea/sonarlint/
 
 ### Eclipse ###
 .apt_generated
