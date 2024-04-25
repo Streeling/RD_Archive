@@ -1,0 +1,16 @@
+server:
+  port : 8081
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: ostock
+            client-secret: 5eG9Qxp2TGkOVEpjTVhnMPnGE5NACFq9
+            authorization-grant-type: authorization_code
+            scope: openid,profile
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8180/realms/spmia-realm
