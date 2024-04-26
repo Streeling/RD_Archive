@@ -83,10 +83,10 @@ models_dir = 'models'
 # Copied from https://github.com/jaymody/picoGPT/blob/817292baea75f194fb0bb8ba2aa5f947af4e45ee/utils.py#L71
 model_dir = os.path.join(models_dir, model_size)
 tf_ckpt_path = tf.train.latest_checkpoint(model_dir)
-print('tf_ckpt_path=' + tf_ckpt_path)
+
 if not tf_ckpt_path:  # download files if necessary
     os.makedirs(model_dir, exist_ok=True)
-    download_gpt2_files(model_size, models_dir)
+    download_gpt2_files(model_size, model_dir)
     tf_ckpt_path = tf.train.latest_checkpoint(model_dir)
 
 # Copied from https://github.com/jaymody/picoGPT/blob/817292baea75f194fb0bb8ba2aa5f947af4e45ee/utils.py#L79
@@ -99,31 +99,40 @@ def convert_to_serializable(obj):
         return obj.tolist()  # Convert ndarray to Python list
     raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
 
-for i in range(len(params['blocks'])):
-    with open(os.path.join(model_dir, "params_blocks_" + str(i) + ".json"), "w") as json_file:
-        json.dump(params['blocks'][i], json_file, default=convert_to_serializable, indent=2)
-
-extracted_dict = {key: value for key, value in params.items() if key != "blocks"}
-with open(os.path.join(model_dir, "params_.json"), "w") as json_file:
-    json.dump(extracted_dict, json_file, default=convert_to_serializable, indent=2)
-
 with open(os.path.join(model_dir, "params.json"), "w") as json_file:
     json.dump(params, json_file, default=convert_to_serializable, indent=2)
 # The params.json file will have the following structure and content:
 #{
-#  "blocks": [
-#    attn -> c_atn
-#    attn -> c_proj
-#    {
-#      "attn": {
-#        "c_attn": {
-#          "b": array of <floats|doubles>,
-#          "w": array of arrays of <floats|doubles>
-#      "mlp" -> c_fc -> b
-#       "ln_1" -> b g
-#       "ln_2" -> b g
-#  ]
-#  "ln_f"
+#  "blocks": [{
+#    "attn": {
+#      "c_attn": {
+#        "b": array of <floats|doubles>,
+#        "w": array of arrays of <floats|doubles>
+#      "c_proj": {
+#        "b": array of <floats|doubles>,
+#        "w": array of arrays of <floats|doubles>
+#      },
+#    },
+#    "mlp": {
+#      c_proj: {
+#        "b": array of <floats|doubles>,
+#        "w": array of arrays of <floats|doubles>
+#      },
+#      c_fc: {
+#        "b": array of <floats|doubles>,
+#        "w": array of arrays of <floats|doubles>
+#      }
+#    },
+#    "ln_1" -> {
+#      "b" and "g": array of <floats|doubles>
+#    },
+#    "ln_2" -> {
+#      "b" and "g": array of <floats|doubles>
+#    }
+#  }, ...],
+#  "ln_f" ->
+#    "b" and "g": array of <floats|doubles>
+#  },
 #  "wpe": array of arrays of <floats|doubles>
 #  "wte": array of arrays of <floats|doubles>
 #}
