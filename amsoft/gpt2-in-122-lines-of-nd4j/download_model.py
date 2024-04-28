@@ -93,14 +93,17 @@ if not tf_ckpt_path:  # download files if necessary
 hparams = json.load(open(os.path.join(model_dir, "hparams.json")))
 params = load_gpt2_params_from_tf_ckpt(tf_ckpt_path, hparams)
 
-# ChatGPT answer to How can I resolve the 'TypeError: Object of type ndarray is not JSON serializable' error when trying to serialize a Python dictionary containing NumPy arrays to a JSON file?
+# ChatGPT answer to "How can I resolve the 'TypeError: Object of type ndarray is not JSON serializable' error when trying to serialize a Python dictionary containing NumPy arrays
+# to a JSON file?"
 def convert_to_serializable(obj):
     if isinstance(obj, np.ndarray):
         return obj.tolist()  # Convert ndarray to Python list
     raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
 
+print('Initiating export of variables from the checkpoint to params.json...')
 with open(os.path.join(model_dir, "params.json"), "w") as json_file:
     json.dump(params, json_file, default=convert_to_serializable, indent=2)
+print('Variable export finished successfully')
 # The params.json file will have the following structure and content:
 #{
 #  "blocks": [{

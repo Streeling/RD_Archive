@@ -25,9 +25,15 @@ dependencies {
     testImplementation("org.hamcrest:hamcrest-core:2.2")
 }
 
-tasks.test {
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+}
+
+tasks.named<Test>("test") {
     useJUnitPlatform()
 
     minHeapSize = "512m"
     maxHeapSize = "1024m"
+
+    systemProperty("file.encoding", "UTF-8")
 }
