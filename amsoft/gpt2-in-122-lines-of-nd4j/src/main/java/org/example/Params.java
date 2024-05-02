@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
 
@@ -125,8 +126,12 @@ public record Params(
   }
 
   static Params getParams(String modelDir) throws IOException {
+    return Params.getParams(modelDir, "params.json");
+  }
+
+  static Params getParams(String modelDir, String paramsFileName) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
-    File paramsFile = Paths.get(modelDir, "params.json").toFile();
+    File paramsFile = Paths.get(modelDir, paramsFileName).toFile();
     long fileSize = paramsFile.length();
 
     // Progress callback to update progress

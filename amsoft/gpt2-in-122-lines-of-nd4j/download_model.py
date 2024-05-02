@@ -139,3 +139,7 @@ print('Variable export finished successfully')
 #  "wpe": array of arrays of <floats|doubles>
 #  "wte": array of arrays of <floats|doubles>
 #}
+
+params_ = {k: v for k, v in params.items() if k != 'blocks'}
+with open(os.path.join(model_dir, "params_.json"), "w") as json_file:
+    json.dump(params_, json_file, default=convert_to_serializable, indent=2)

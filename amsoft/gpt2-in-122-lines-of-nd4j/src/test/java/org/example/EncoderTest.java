@@ -80,4 +80,11 @@ class EncoderTest {
 
     assertThat(encoder.decode(inputIds), is("Not all heroes wear capes."));
   }
+
+  @Test
+  void decode2() {
+    List<Integer> inputIds = encoder.encode("Java JavaScript chemistry");
+
+    assertThat(encoder.decode(inputIds), is("Not all heroes wear capes."));
+  }
 }

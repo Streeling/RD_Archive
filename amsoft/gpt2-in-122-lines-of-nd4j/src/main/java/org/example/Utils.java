@@ -1,10 +1,24 @@
 package org.example;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class Utils {
+
+  static Map<String, Object> loadHparamsJson(String modelDir) throws IOException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    Path hparamsPath = Paths.get(modelDir, "hparams.json");
+    File hparamsFile = hparamsPath.toFile();
+    Map<String, Object> hparams = objectMapper.readValue(hparamsFile, objectMapper.getTypeFactory().constructMapType(Map.class, String.class, Object.class));
+    return hparams;
+  }
 
   /**
    * Copied from ChatGPT answer to "Implement a visually appealing progress display in a Java console application.
@@ -36,10 +50,8 @@ public class Utils {
     private final InputStream inputStream;
     private final long totalBytes;
     private long bytesRead;
-//    private Consumer<Double> progressCallback;
     private Consumer<Long> progressCallback;
 
-//    public ProgressTrackingInputStream(InputStream inputStream, long totalBytes, Consumer<Double> progressCallback) {
     public ProgressTrackingInputStream(InputStream inputStream, long totalBytes, Consumer<Long> progressCallback) {
       this.inputStream = inputStream;
       this.totalBytes = totalBytes;
@@ -68,8 +80,6 @@ public class Utils {
 
     private void updateProgress() {
       if (progressCallback != null && totalBytes > 0) {
-//        double progress = (double) bytesRead / totalBytes;
-//        progressCallback.accept(progress);
         progressCallback.accept(bytesRead);
       }
     }

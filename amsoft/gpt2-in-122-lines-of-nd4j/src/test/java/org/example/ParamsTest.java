@@ -23,22 +23,6 @@ class ParamsTest {
     params = Params.getParams(Paths.get("models", "124M").toString());
   }
 
-//  public static void main(String... args) throws IOException {
-//    ParamsTest.params = Params.getParams(Paths.get(System.getProperty("user.dir"), "amsoft", "gpt2-in-122-lines-of-nd4j", "models", "124M").toString());
-//
-//    ParamsTest paramsTest = new ParamsTest();
-//    paramsTest.blocks();
-//    paramsTest.attnCAttn();
-//    paramsTest.attnCProj();
-//    paramsTest.blocksMlpCFc();
-//    paramsTest.blocksMlpCProj();
-//    paramsTest.blocksLn1();
-//    paramsTest.blocksLn2();
-//    paramsTest.getLnF();
-//    paramsTest.getWpe();
-//    paramsTest.getWte();
-//  }
-
   @Test
   void blocks() {
     assertThat(params.blocks(), is(arrayWithSize(12)));

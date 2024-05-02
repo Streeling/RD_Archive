@@ -2,6 +2,7 @@ package org.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -117,7 +118,7 @@ public class Encoder {
       int i = 0;
       while (i < word.size()) {
         int j = word.subList(i, word.size()).indexOf(first);
-        if (j > -1) {
+        if (j > -1 && j >= i) {
           newWord.addAll(word.subList(i, j).stream().map(String::valueOf).collect(Collectors.toList()));
           i = j;
         } else {
@@ -180,7 +181,8 @@ public class Encoder {
   public static Encoder getEncoder(String modelName, String modelsDir) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
     Path encoderFilePath = Paths.get(modelsDir, modelName, "encoder.json");
-    Map<String, Integer> encoder = mapper.readValue(encoderFilePath.toFile(), mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class));
+    File encoderFile = encoderFilePath.toFile();
+    Map<String, Integer> encoder = mapper.readValue(encoderFile, mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class));
     Path bpeFilePath = Paths.get(modelsDir, modelName, "vocab.bpe");
     Scanner scanner = new Scanner(bpeFilePath);
     List<List<String>> bpeMerges = new ArrayList<>();
