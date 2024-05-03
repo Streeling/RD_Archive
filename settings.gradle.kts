@@ -10,3 +10,8 @@ include("amsoft:oauth2-client")
 findProject(":amsoft:oauth2-client")?.name = "oauth2-client"
 include("amsoft:gpt2-in-about-150-lines-of-nd4j")
 findProject(":amsoft:gpt2-in-about-150-lines-of-nd4j")?.name = "gpt2-in-about-150-lines-of-nd4j"
+include("itlab")
+include("itlab:strings")
+findProject(":itlab:strings")?.name = "strings"
+include("itlab:reference-objects")
+findProject(":itlab:reference-objects")?.name = "reference-objects"
