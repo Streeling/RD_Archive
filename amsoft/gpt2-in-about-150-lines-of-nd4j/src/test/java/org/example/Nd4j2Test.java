@@ -14,6 +14,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class Nd4j2Test {
   @Test
@@ -163,6 +164,7 @@ class Nd4j2Test {
   void similarity() throws IOException {
     String modelSize = "124M";
     String modelsDir = "models";
+    assumeTrue("UTF-8".equals(System.getProperty("file.encoding")));
     Params params = Params.getParams(Paths.get(modelsDir, modelSize).toString(), "params_.json");
     Encoder encoder = Encoder.getEncoder(modelSize, modelsDir);
 

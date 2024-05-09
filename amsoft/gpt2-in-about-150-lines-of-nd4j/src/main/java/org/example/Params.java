@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.util.StdConverter;
 
+import de.undercouch.bson4jackson.BsonFactory;
+
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
@@ -126,17 +128,20 @@ public record Params(
   }
 
   static Params getParams(String modelDir) throws IOException {
-    return Params.getParams(modelDir, "params.json");
+//    return Params.getParams(modelDir, "params.json");
+    return Params.getParams(modelDir, "params.bson");
   }
 
   static Params getParams(String modelDir, String paramsFileName) throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
+//    ObjectMapper mapper = new ObjectMapper();
+    ObjectMapper mapper = new ObjectMapper(new BsonFactory());;
     File paramsFile = Paths.get(modelDir, paramsFileName).toFile();
     long fileSize = paramsFile.length();
 
     // Progress callback to update progress
     Consumer<Long> progressCallback = bytesRead -> {
-      Utils.updateProgress("loading params.json", bytesRead, fileSize);
+//      Utils.updateProgress("loading params.json", bytesRead, fileSize);
+      Utils.updateProgress("loading params.bson", bytesRead, fileSize);
     };
 
     Params params = null;

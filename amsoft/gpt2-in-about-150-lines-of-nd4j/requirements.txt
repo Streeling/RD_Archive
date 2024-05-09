@@ -5,3 +5,4 @@ fire
 tqdm
 orjson
 requests
+bson

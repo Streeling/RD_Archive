@@ -19,6 +19,7 @@ dependencies {
     implementation("org.nd4j:nd4j-backends:1.0.0-M2.1")
     implementation("commons-cli:commons-cli:1.6.0")
     implementation("org.slf4j:slf4j-api:2.0.13")
+    implementation("de.undercouch:bson4jackson:2.15.1")
     testImplementation("org.slf4j:slf4j-simple:2.0.13")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")

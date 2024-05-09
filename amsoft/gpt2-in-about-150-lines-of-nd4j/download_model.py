@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import re
+import bson
 
 import numpy as np
 import requests
@@ -100,9 +101,14 @@ def convert_to_serializable(obj):
         return obj.tolist()  # Convert ndarray to Python list
     raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
 
-print('Initiating export of variables from the checkpoint to params.json...')
-with open(os.path.join(model_dir, "params.json"), "w") as json_file:
-    json.dump(params, json_file, default=convert_to_serializable, indent=2)
+print('Initiating export of variables from the checkpoint to params file...', flush=True)
+# Commenting the json-export code because the output is very large (~4GB) and its loading on Java side is very slow,
+# but it was worth it, e.g. it demonstrated that Jackson can handle such big files
+# with open(os.path.join(model_dir, "params.json"), "w") as json_file:
+#          json.dump(params, json_file, default=convert_to_serializable, indent=2)
+# BSON file is 4 time smaller than the JSON file, of course there are other alternatives, but they are too standard
+with open(os.path.join(model_dir, "params.bson"), "wb") as bson_file:
+    bson_file.write(bson.dumps(params, on_unknown=convert_to_serializable))
 print('Variable export finished successfully')
 # The params.json file will have the following structure and content:
 #{
@@ -139,7 +145,3 @@ print('Variable export finished successfully')
 #  "wpe": array of arrays of <floats|doubles>
 #  "wte": array of arrays of <floats|doubles>
 #}
-
-params_ = {k: v for k, v in params.items() if k != 'blocks'}
-with open(os.path.join(model_dir, "params_.json"), "w") as json_file:
-    json.dump(params_, json_file, default=convert_to_serializable, indent=2)
