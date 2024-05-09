@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.is;
 
 /**
- * Unit tests {@link Params}.
+ * Unit tests {@link Params} for 124M model size.
  */
 class ParamsTest {
 
@@ -20,7 +20,7 @@ class ParamsTest {
 
   @BeforeAll
   static void initAll() throws IOException {
-    params = Params.getParams(Paths.get("models", "124M").toString());
+    params = Params.getParams(Paths.get("models", "124M"));
   }
 
   @Test

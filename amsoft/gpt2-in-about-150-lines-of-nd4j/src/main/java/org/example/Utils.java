@@ -6,15 +6,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.function.Consumer;
 
 public class Utils {
 
-  static Map<String, Object> loadHparamsJson(String modelDir) throws IOException {
+  private Utils() {
+
+  }
+
+  static Map<String, Object> loadHparamsJson(Path modelDir) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
-    Path hparamsPath = Paths.get(modelDir, "hparams.json");
+    Path hparamsPath = modelDir.resolve("hparams.json");
     File hparamsFile = hparamsPath.toFile();
     Map<String, Object> hparams = objectMapper.readValue(hparamsFile, objectMapper.getTypeFactory().constructMapType(Map.class, String.class, Object.class));
     return hparams;
@@ -50,7 +53,7 @@ public class Utils {
     private final InputStream inputStream;
     private final long totalBytes;
     private long bytesRead;
-    private Consumer<Long> progressCallback;
+    private final Consumer<Long> progressCallback;
 
     public ProgressTrackingInputStream(InputStream inputStream, long totalBytes, Consumer<Long> progressCallback) {
       this.inputStream = inputStream;

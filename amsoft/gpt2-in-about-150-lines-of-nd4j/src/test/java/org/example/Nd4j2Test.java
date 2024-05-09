@@ -9,13 +9,15 @@ import org.nd4j.linalg.ops.transforms.Transforms;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+/**
+ * Unit tests for misc INDArray operations.
+ */
 class Nd4j2Test {
   @Test
   void mean() {
@@ -155,25 +157,21 @@ class Nd4j2Test {
 
   }
 
-  /**
-   * https://www.offconvex.org/2015/12/12/word-embeddings-1/
-   * https://www.offconvex.org/2016/02/14/word-embeddings-2/
-   * @throws IOException
-   */
   @Test
   void similarity() throws IOException {
     String modelSize = "124M";
     String modelsDir = "models";
     assumeTrue("UTF-8".equals(System.getProperty("file.encoding")));
-    Params params = Params.getParams(Paths.get(modelsDir, modelSize).toString(), "params_.json");
+    Params params = Params.getParams(Paths.get(modelsDir, modelSize));
     Encoder encoder = Encoder.getEncoder(modelSize, modelsDir);
 
-    List<Integer> tokens = encoder.encode("Java JavaScript chemistry hot cold name John woman");
-    INDArray java = params.wte().getRow(tokens.get(0));
-    INDArray javaScript = params.wte().getRow(tokens.get(1));
-    INDArray chemistry = params.wte().getRow(tokens.get(2));
+    // Inspired by https://www.offconvex.org/2015/12/12/word-embeddings-1/
+//    List<Integer> tokens = encoder.encode("milk cow stone");
+    INDArray milk = params.wte().getRow(7544/*tokens.get(0)*/);
+    INDArray cow = params.wte().getRow(9875/*tokens.get(1)*/);
+    INDArray stone = params.wte().getRow(7815/*tokens.get(2)*/);
 
-    // java is more similar to javascript (closer to 1), than is to chemistry
-    assertThat(1 - Transforms.cosineSim(java, javaScript), is(lessThan(Transforms.cosineSim(java, chemistry))));
+    // milk is more similar to cow (closer to 1), than is to stone
+    assertThat(1 - Transforms.cosineSim(milk, cow), is(lessThan(1 - Transforms.cosineSim(milk, stone))));
   }
 }

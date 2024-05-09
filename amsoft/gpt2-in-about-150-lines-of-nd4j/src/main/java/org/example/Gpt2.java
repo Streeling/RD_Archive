@@ -12,6 +12,7 @@ import org.nd4j.linalg.factory.ops.NDBase;
 import org.nd4j.linalg.ops.transforms.Transforms;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +66,7 @@ public class Gpt2 {
     // Split into QKV, then heads
     List<INDArray[]> qkvHeads = Arrays.stream(nd4jBase.split(x, 3, -1))
         .map(subMatrix -> nd4jBase.split(subMatrix, nHead, -1))
-        .collect(Collectors.toList());
+        .toList();
     assert qkvHeads.size() == 3 : "something wrong";
     long n = x.shape()[0];
     // Causal mask to hide future inputs from being attended to
@@ -97,7 +98,7 @@ public class Gpt2 {
     return x;
   }
 
-  INDArray gpt2(int[] inputs, INDArray wte, INDArray wpe, Params.Block[] blocks, Params.LayerNormalization lnF, int nHead) throws IOException {
+  INDArray gpt2(int[] inputs, INDArray wte, INDArray wpe, Params.Block[] blocks, Params.LayerNormalization lnF, int nHead) {
     // Token + positional embeddings
     INDArray x = wte.getRows(inputs).add(wpe.getRows(ArrayUtil.range(0, inputs.length)));
 
@@ -149,7 +150,7 @@ public class Gpt2 {
       String modelSize = cmd.getOptionValue("s", "124M");
       String modelsDir = cmd.getOptionValue("d", "models");
 
-      String modelDir = Paths.get(modelsDir, modelSize).toString();
+      Path modelDir = Paths.get(modelsDir, modelSize);
 
       // Load encoder, hparams, and params from the released open-ai gpt-2 files
       Encoder encoder = Encoder.getEncoder(modelSize, modelsDir);

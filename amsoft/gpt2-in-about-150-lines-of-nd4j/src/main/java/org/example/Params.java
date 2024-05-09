@@ -16,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
@@ -127,22 +126,18 @@ public record Params(
   ) {
   }
 
-  static Params getParams(String modelDir) throws IOException {
-//    return Params.getParams(modelDir, "params.json");
+  static Params getParams(Path modelDir) throws IOException {
     return Params.getParams(modelDir, "params.bson");
   }
 
-  static Params getParams(String modelDir, String paramsFileName) throws IOException {
-//    ObjectMapper mapper = new ObjectMapper();
-    ObjectMapper mapper = new ObjectMapper(new BsonFactory());;
-    File paramsFile = Paths.get(modelDir, paramsFileName).toFile();
+  static Params getParams(Path modelDir, String paramsFileName) throws IOException {
+    ObjectMapper mapper = new ObjectMapper(new BsonFactory());
+    File paramsFile = modelDir.resolve(paramsFileName).toFile();
     long fileSize = paramsFile.length();
 
     // Progress callback to update progress
-    Consumer<Long> progressCallback = bytesRead -> {
-//      Utils.updateProgress("loading params.json", bytesRead, fileSize);
+    Consumer<Long> progressCallback = bytesRead ->
       Utils.updateProgress("loading params.bson", bytesRead, fileSize);
-    };
 
     Params params = null;
     // Open input stream with progress tracking
