@@ -9,7 +9,7 @@ This project includes files with different licenses. Below is a summary of the l
 The majority of the code in this project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more details.
 
 ### Secondary License
-All AsciiDoc file, i.e. **\*.adoc**, are licensed under the [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1). 
+All AsciiDoc files, i.e. **\*.adoc**, are licensed under the [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1). 
 See the [LICENSE-SECONDARY](./LICENSE-SECONDARY) file for the full text of the CC BY 4.0 License.
 
 ### Overriding Primary and Secondary Licenses
