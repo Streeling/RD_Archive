@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * Converted with ChatGPT from https://github.com/jaymody/picoGPT/blob/main/encoder.py
+ * Converted with ChatGPT from https://github.com/jaymody/picoGPT/blob/817292baea75f194fb0bb8ba2aa5f947af4e45ee/encoder.py
  */
 public class Encoder {
   private Map<String, Integer> encoder;

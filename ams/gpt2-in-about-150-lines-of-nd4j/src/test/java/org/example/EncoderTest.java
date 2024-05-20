@@ -69,11 +69,17 @@ class EncoderTest {
     assertEquals("ĠAll", encoder.bpe("ĠAll"), "Wrong bpe");
   }
 
+  /**
+   * The sentence was copied from blog post: GPT in 60 Lines of Numpy (https://jaykmody.com/blog/gpt-from-scratch/)
+   */
   @Test
   void encode() {
     assertThat(encoder.encode("Not all heroes wear capes."), contains(3673, 477, 10281, 5806, 1451, 274, 13));
   }
 
+  /**
+   * The sentence was copied from blog post: GPT in 60 Lines of Numpy (https://jaykmody.com/blog/gpt-from-scratch/)
+   */
   @Test
   void decode() {
     List<Integer> inputIds = encoder.encode("Not all heroes wear capes.");

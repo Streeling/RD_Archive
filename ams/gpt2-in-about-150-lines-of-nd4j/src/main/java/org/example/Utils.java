@@ -15,6 +15,9 @@ public class Utils {
 
   }
 
+  /**
+   * Copied from https://github.com/jaymody/picoGPT/blob/817292baea75f194fb0bb8ba2aa5f947af4e45ee/utils.py#L68
+   */
   static Map<String, Object> loadHparamsJson(Path modelDir) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     Path hparamsPath = modelDir.resolve("hparams.json");
@@ -24,7 +27,7 @@ public class Utils {
   }
 
   /**
-   * Copied from ChatGPT answer to "Implement a visually appealing progress display in a Java console application.
+   * Copied and adapted from ChatGPT answer to "Implement a visually appealing progress display in a Java console application.
    * Inspired from python tqdm".
    */
   static void updateProgress(String msg, long progress, long total) {
@@ -45,8 +48,8 @@ public class Utils {
   }
 
   /**
-   * Copied from Chat GPT answer to the question "I have a large file that I'm loading using the Jackson library in Java, and it takes some time to load. Is there a way to display
-   * the progress of reading the file while it's being loaded?"
+   * Copied and adapted from Chat GPT answer to the question "I have a large file that I'm loading using the Jackson library in Java, and it takes some time to load.
+   * Is there a way to display the progress of reading the file while it's being loaded?"
    */
   public static class ProgressTrackingInputStream extends InputStream {
 

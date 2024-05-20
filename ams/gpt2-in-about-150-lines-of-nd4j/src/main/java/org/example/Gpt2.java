@@ -18,13 +18,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.example.Utils.loadHparamsJson;
 import static org.example.Utils.updateProgress;
 
 /**
- * Copied from https://github.com/jaymody/picoGPT/blob/main/gpt2.py.
+ * Copied from https://github.com/jaymody/picoGPT/blob/817292baea75f194fb0bb8ba2aa5f947af4e45ee/gpt2.py.
  */
 public class Gpt2 {
   INDArray gelu(INDArray x) {

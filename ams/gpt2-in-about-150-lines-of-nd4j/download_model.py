@@ -115,33 +115,33 @@ print('Variable export finished successfully')
 #  "blocks": [{
 #    "attn": {
 #      "c_attn": {
-#        "b": array of <floats|doubles>,
-#        "w": array of arrays of <floats|doubles>
+#        "b": array of <doubles>,
+#        "w": array of arrays of <doubles>
 #      "c_proj": {
-#        "b": array of <floats|doubles>,
-#        "w": array of arrays of <floats|doubles>
+#        "b": array of <doubles>,
+#        "w": array of arrays of <doubles>
 #      },
 #    },
 #    "mlp": {
 #      c_proj: {
-#        "b": array of <floats|doubles>,
-#        "w": array of arrays of <floats|doubles>
+#        "b": array of <doubles>,
+#        "w": array of arrays of <doubles>
 #      },
 #      c_fc: {
-#        "b": array of <floats|doubles>,
-#        "w": array of arrays of <floats|doubles>
+#        "b": array of <doubles>,
+#        "w": array of arrays of <doubles>
 #      }
 #    },
 #    "ln_1" -> {
-#      "b" and "g": array of <floats|doubles>
+#      "b" and "g": array of <doubles>
 #    },
 #    "ln_2" -> {
-#      "b" and "g": array of <floats|doubles>
+#      "b" and "g": array of <doubles>
 #    }
 #  }, ...],
 #  "ln_f" ->
-#    "b" and "g": array of <floats|doubles>
+#    "b" and "g": array of <doubles>
 #  },
-#  "wpe": array of arrays of <floats|doubles>
-#  "wte": array of arrays of <floats|doubles>
+#  "wpe": array of arrays of <doubles>
+#  "wte": array of arrays of <doubles>
 #}
