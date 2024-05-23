@@ -30,3 +30,10 @@ In (IntelliJ IDEA) *Run > Edit Configurations*:
 1. VM options: `"-Dfile.encoding=UTF-8"`
 2. Main class: `org.example.Gpt2`
 3. Program argument: `-p "Not all heroes wear capes." -n 40 -d "ams\gpt2-in-about-150-lines-of-nd4j\models"`
+
+## Recommended Readings
+
+1. [GPT in 60 Lines of NumPy](https://jaykmody.com/blog/gpt-from-scratch/)
+2. [Happy New Year: GPT in 500 lines of SQL](https://explainextended.com/2023/12/31/happy-new-year-15/)
+3. [What Is ChatGPT Doing … and Why Does It Work?](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/)
+4. [How LLMs Work, Explained Without Math](https://blog.miguelgrinberg.com/post/how-llms-work-explained-without-math)
