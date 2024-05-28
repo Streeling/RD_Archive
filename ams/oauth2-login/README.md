@@ -25,3 +25,13 @@ and voila!
 In order to log out, access standard spring security logout line: `localhost:8081/logout`.
 
 
+## Replacing Keycloack with GitHub OAth
+
+Inspired by https://www.oauth.com/oauth2-servers/accessing-data/create-an-application/
+
+Got to https://github.com/settings/developers and create new application. Important fields:
+
+Homepage URL> http://localhost:8080/
+Authorization callback URL> http://localhost:8080/login/oauth2/code/github.
+
+Now rerun the application with `-Dspring.profiles.active=github`.
