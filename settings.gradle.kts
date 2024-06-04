@@ -15,3 +15,7 @@ include("itlab:strings")
 findProject(":itlab:strings")?.name = "strings"
 include("itlab:reference-objects")
 findProject(":itlab:reference-objects")?.name = "reference-objects"
+include("ams:oauth2-resource-server-token-propagation")
+findProject(":ams:oauth2-resource-server-token-propagation")?.name = "oauth2-resource-server-token-propagation"
+include("ams:spring-intro")
+findProject(":ams:spring-intro")?.name = "spring-intro"
