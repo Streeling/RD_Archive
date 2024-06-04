@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +22,11 @@ public class CustomerController {
   @GetMapping("/customers")
   public ResponseEntity<String> customers() {
     return this.webClient.get()
-        .uri("http://localhost:8080/customers")
+//        .uri("http://localhost:8080/customers")
+        .uri("http://localhost:8082/customers")
         .attributes(clientRegistrationId("keycloak"))
+//        .attributes(clientRegistrationId("github"))
+//        .attributes(clientRegistrationId("google"))
         .retrieve()
         .toEntity(String.class)
         .block();
