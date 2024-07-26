@@ -20,3 +20,5 @@ findProject(":ams:oauth2-resource-server-token-propagation")?.name = "oauth2-res
 include("i")
 include("i:java-jokes")
 findProject(":i:java-jokes")?.name = "java-jokes"
+include("ams:spring-intro")
+findProject(":ams:spring-intro")?.name = "spring-intro"

@@ -1,0 +1,946 @@
+= 2024 Notes
+:imagesdir: ../resources/images
+:toc:
+
+== READING: https://www.academia.edu/54690538/If_You_Cant_Teach_Yourself_No_One_Can?email_work_card=reading-history["If You Can't Teach Yourself, No One Can,"] by Timna Mayer
+indexterm:[teaching]
+
+"...it is apparent that students can often apply teacher-provided solutions to technical and musical problems successfully,
+but are frequently unable to rely on their own judgement and problem-solving skills. ... It has become clear that there is an absolute need for educators to teach their students how to become self-directed learners.
+This paper asserts that self-directed learning has an unprecedented impact on learning."
+
+"The self-learning model requires these seven steps.
+
+Step 1: Recognize that a Problem Exists
+
+Step 2: Describe the Problem
+...
+"
+
+== READING: https://www.academia.edu/64372907/Five_Week_Courses_for_MBAs?email_work_card=thumbnail["Five Week Courses for MBAs,"] by Greg Zerovnik
+indexterm:[teaching, education]
+
+"Students aren't customers! We can't just give them what they want. They don't know what they want until after they've heard what we have to tell them!"
+
+Personal note: If we view learning as a transformation process, then the phrase "They don't know what they want until after they've heard what we have to tell them!" makes sense to me.
+A student may desire X before the learning process, but after learning, due to the transformation, the student may now desire Y, which is different from X.
+
+== Event bubbling and event capture in JavaScript
+indexterm:[event bubbling, event capture]
+
+There are many web pages written on this subject, but the most user-friendly (first) and the most theoretically-friendly (second) are the following two:
+
+1. https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#event_bubbling
+
+2. https://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-flow-basic
+
+== Is JavaScript single-threaded?
+indexterm:[single-threaded]
+
+In theory, yes, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop#run-to-completion[The event loop] page,
+form developer.mozilla.org. Then look at the examples from
+https://stackoverflow.com/questions/2734025/is-javascript-guaranteed-to-be-single-threaded/2734311#2734311[this Stackoverflow answer].
+
+== Create a simple react application in a minimum number of steps
+indexterm:[react, minimum]
+
+[source,shell]
+----
+npm install -g react-scripts
+npx create-react-app my-app
+cd my-app
+npm start
+----
+
+== Overview of React's `useState`
+indexterm:[react, useState]
+
+The https://github.com/facebook/react/blob/f1338f8080abd1386454a10bbf93d67bfe37ce85/packages/react/src/ReactHooks.js#L80[useState()] retrieves the current dispatcher,
+https://github.com/facebook/react/blob/f1338f8080abd1386454a10bbf93d67bfe37ce85/packages/react/src/ReactHooks.js#L24[ReactCurrentDispatcher.current] variable.
+The assignment of `ReactCurrentDispatcher.current` may be found in several files:
+
+. ReactFiberHooks.js
+. ReactFizzHooks.js
+. ReactFlightServer.js
+
+These files define multiple dispatchers. I choose the `HooksDispatcherOnMount` from **ReactFiberHooks.js** file.
+Now we will se that `useState` from `HooksDispatcherOnMount`
+
+1. creates a `Hook` object and assigns the initial state to fields `memoizedState` and `baseState` of the `Hook` object;
+2. creates an `UpdateQueue` and assigns it to `queue` field of the `Hook` object;
+3. creates a `Dispatch` object by binding the `dispatchSetState` function to `currentlyRenderingFiber` and `queue`;
+4. `return [hook.memoizedState, dispatch]`.
+
+Interesting notions that I will analyze in the future:
+
+1. What is a **lane**?
+2. What is a **workInProgressHook**?
+3. What is a **currentlyRenderingFiber**?
+4. Also check https://github.com/acdlite/react-fiber-architecture#what-is-a-fiber
+4. Also check https://reactresources.com/topics/advanced-concepts
+
+== GPT-2 in about 150 lines of Java
+
+Published online at https://vundicind.blogspot.com/2024/05/gpt-2-in-about-150-lines-of-java.html.
+
+Found a very interesting post "GPT in 500 lines of SQL" (https://explainextended.com/2023/12/31/happy-new-year-15/) which was inspired from "GPT in 60 Lines of NumPy" (https://jaykmody.com/blog/gpt-from-scratch/).
+And of course I could not resist the temptation to do the same but in Java :-) In addition, "all I saw" in the source code were mostly matrix operations, which I like a lot.
+
+image::matrix-multiply-a.png[]
+image from https://www.mathsisfun.com/algebra/matrix-multiplying.html
+
+Thanks to Nd4j library which offers the same flexibility of working with matrices as NumPy, I managed to convert the source code from https://jaykmody.com/blog/gpt-from-scratch/ into about 150 lines of Java (https://github.com/Streeling/RD_Archive/tree/main/ams/gpt2-in-about-150-lines-of-nd4j).
+
+== A by-enumeration approach to understanding Spring Boot and its differences from classic Spring
+
+Spring Boot comprises https://github.com/spring-projects/spring-boot/tree/v3.3.0/spring-boot-project[14 modules] that can be categorized as follows:
+
+- spring-boot-starter(s): Each submodule within this module, such as spring-boot-starter-data-jpa, contains only one file: build.gradle, with no source code.
+According to the README, they are dependency descriptors.
+From my point of view this approach has similarities with Maven's
+https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms[Bill of Material (BOM) POM], but they are not identical.
+
+- spring-parent: Similar to the above (i.e. starters) but with a larger build.gradle file.
+It might be equivalent to https://github.com/spring-projects/spring-framework/blob/main/framework-bom/framework-bom.gradle[Spring Framework BOM], which needs further analysis.
+
+- spring-boot-dependencies: <TO BE CONTINUED>
+
+- spring-boot-autoconfigure: Introduces the `@AutoConfiguration` annotation and the `@ConditionalOn`-family of annotations, which allow configuration classes to be activated only
+under certain conditions.
+
+- spring-boot: Defines the `SpringApplication` class, which is central to running a Spring Boot application.
+
+What I dislike about Spring Boot is that it comes with more declarative overhead: debugging declarative programs can be quite challenging.
+
+== Spring Lite-Mode beans
+
+"When a `@Bean` method is declared within a `@Component` annotated class or a plain class, it is not proxied and behaves as a normal java method - so it does not return an
+instance from the spring container but rather creates a new instance." (see https://stackoverflow.com/a/74901358). Explore these interesting examples (and an explanation of the
+limitations of bean lite mode on bean interdependencies) from
+https://aneri-v.medium.com/spring-bean-annotation-what-how-and-why-24f7abe20f83[Spring Bean annotation: What, How, and Why?] by Aneri Vyas.
+
+== Open-Closed principle
+
+Let's state the principle: "software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification"
+(see https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle).
+
+Here are my personal thoughts on how to achieve that. Let's consider a "set-theoretical" approach.
+If we view a class as a set `A` of lines of code. Then we must not modify the content of `A`. This represents the closure aspect.
+
+However, to extend the functionality of A, we will need to modify certain parts of A.
+Therefore, we must (1) extract those parts from A as external sets, such as `B`, `C`, and so on.
+Next, (2) establish a relationships `R1`, `R2` ... between the parts of `A` where code was extracted and the new sets `B` and `C`.
+
+At this point, we have two options:
+
+1. Extending the functionality by modifying `B`, `C`, etc., would contradict the Open-Closed Principle for `B`, `C`, etc.
+2. Extending the functionality by introducing new sets (classes) such as `B'`, `C'`, etc., and defining relations `R1`, `R2`, etc.,
+in a manner that allows seamless switching between `B` and `B'`, `C` and `C'`, etc.
+
+image::set_A_A_R_B.png[]
+
+I think option 2 aligns closely with the concept of "decoupling".
+
+Mathematically, to enable the flexibility to switch between `B` and `B'`, `C` and `C'`, etc., the relations `R1`, `R2`, etc.,
+must establish links between set `A` and families of sets `{B, B', B'', ...}`, `{C, C', C'', ...}`, and so forth. Like set-valued mappings.
+
+For example the relation "use an object b of extendable class B" is a solution. Because if we have inside `A` the line
+
+```
+b.method1();
+```
+
+where `b` is of type `B`, then we can always replace `b` with an object of type `B'`, where `B'` extends `B`.
+
+A more explicit relationship might be described as "use an object b of interface B" or "use an object b of abstract class B."
+In light of the above, an interface serves as a relationship to a family or hierarchy of interfaces and classes that implement it.
+
+A specific type of relation is the mapping, or function. If we put inside `A` the line
+
+```
+method1();
+```
+
+To extend the functionality of `method1()`, it must relate not only to its own body but also to a family of methods named `method1()``.
+This can be achieved using the template method pattern.
+
+Possibly, the last part involving the mapping concept could be refined to "use a method that can be overridden".
+
+Some links:
+
+https://www.cs.utexas.edu/users/downing/papers/OCP-1996.pdf
+
+The above relations may be generalized. I remeber that the original concept of object-oritented programming was not
+using the notion "call method1() of object b" rather "send message1 to object b".
+
+!!!But why? In mathematics I may learn how to solve a quadric equation. I knwo that this method is correct. It works always.
+Does Open-CLosed principle work always? I understand that if I have technology that soleve the family of problems P,
+and than I want to extend teh familiy to P', I have to extend the technology withoyr changing existing. Why?
+Because the butgs are inevitable ? If a change technology I could alter the P? Okay.
+
+The inverse operation. Invers de la B la A. Evidentiem baza de vectori. Baza de vectori n-o mai poti schimba.
+
+== HTTPS implementation in a pure Bash script
+
+For learning purposes regarding HTTPS, examine the source code of this project: https://github.com/gh2o/bash_tls/tree/master. Additionally, for a stronger learning impact, you
+could try converting the project to Java.
+
+== Minimal projects focusing on service discovery and circuit breaking
+
+- https://github.com/chetankamadinni/service-discovery-demo
+
+- https://github.com/chetankamadinni/circuit-breaker-demo
+
+== WATCHING: ChatGPT is Just the Beginning: Generative AI will Transform Computing, by Douglas Schmidt
+
+https://www.youtube.com/watch?v=ej980l42svM
+
+"Please read the attached PDF and generate a multiple choice quiz question with four options related to the primary objective of the FileCounter case study."
+https://youtu.be/ej980l42svM?t=2411
+
+"Generating \"knowledge check\" questions for presentations & online courses."
+https://youtu.be/ej980l42svM?t=2463
+
+"AI+ helps improve reviewing of programming assignment for my CS courses."
+https://youtu.be/ej980l42svM?t=2964
+
+"ChatGPT is an effective tool when used for iterative improvements in its accuracy."
+https://youtu.be/ej980l42svM?t=3183
+
+== Software reuse
+
+I was always thinking that software reuse is creating some functions, classes, modules in such a way that we could reuse them in different combinations.
+I.e. different combinations of classes will solve a problem. But ... its more than classes - the points. You also should have the framework.
+A part of these "combinations" must reside in the "framework".
+
+== How to avoid the N+1 Query Problem in GraphQL
+
+- In https://piotrminkowski.com/2020/07/31/an-advanced-guide-to-graphql-with-spring-boot/[An Advanced Guide to GraphQL with Spring Boot], the author utilizes
+`DataFetchingEnvironment.getSelectionSet()` to verify the presence of a specific field in the query and fetch (`Root.fetch` from Criteria API) the corresponding related entity:
++
+[source,java]
+----
+if (s.contains("employees") && !s.contains("organization"))
+         return repository.findAll(fetchEmployees());
+----
++
+[source,java]
+----
+private Specification<Department> fetchEmployees() {
+   return (Specification<Department>) (root, query, builder) -> {
+      Fetch<Department, Employee> f = root.fetch("employees", JoinType.LEFT);
+      Join<Department, Employee> join = (Join<Department, Employee>) f;
+      return join.getOn();
+   };
+}
+----
+
+- In https://github.com/dguduguntla/graphql-spring-jpa-spqr[GraphQL in Java using SPQR], the author uses a class `EntityGraphSelectorUtil` that analyze the fields
+from `DataFetchingEnvironment.getSelectionSet()` and chose the right `EntityGraph` for subsequent fetching. See for eaxample
+https://github.com/dguduguntla/graphql-spring-jpa-spqr/blob/master/src/main/java/com/gdp/graphql/service/EmployeeService.java[EmployeeService] class.
+The project uses https://github.com/Cosium/spring-data-jpa-entity-graph[Spring Data JPA EntityGraph] as depenedcy to send a EntityGraph object as parameter to
+Spring Boot repository methods.
+
+- In https://github.com/dguduguntla/graphql-spring-jpa-spqr[GraphQL in Java using SPQR], the author employs a class named `EntityGraphSelectorUtil` to analyze fields from
+`DataFetchingEnvironment.getSelectionSet()` and select the appropriate `EntityGraph` for subsequent fetching. For instance, see the `EmployeeService` class. This project uses
+Spring Data JPA EntityGraph as a dependency to pass an `EntityGraph` object to Spring Boot repository methods.
+** https://medium.com/@gdprao/graphql-with-spqr-and-spring-data-jpa-973e50746ad5[GraphQL with SPQR and Spring Data JPA].
+
+- The official way to resolve this problem is by using the batch loading feature with the `@BatchMapping` annotation. Here are some examples:
+** https://techdozo.dev/spring-for-graphql-how-to-solve-the-n1-problem/[Spring for GraphQL: How to solve the N+1 Problem?]
+** https://blog.stackademic.com/caching-problem-with-graphql-in-spring-boot-8021fe6089d7[N+1 Problem for GraphQL in Spring Boot solved using Batching]
+
+- The https://github.com/nazarimilad/spring-boot-graphql-querydsl-demo[Java demo project] demonstrates efficient fetching of relational data, preventing unnecessary selections,
+joins, and the N+1 problem when querying data. For instance, in the
+https://github.com/nazarimilad/spring-boot-graphql-querydsl-demo/blob/main/src/main/java/be/nazarimilad/springbootgraphqlquerydsldemo/controller/DeliveryOrderController
+.java[DeliveryOrderController.java], the repository method is called with `DataFetchingFieldSelectionSet`: `deliveryOrderRepository.findDeliveryOrder(selectionSet, id)`.
+Within `deliveryOrderRepository`, the `queryBuilder.innerJoin` explicitly joins a related entity, thereby avoiding the N+1 query problem.
+
+- In the article https://www.graphql-java.com/blog/deep-dive-data-fetcher-results/[Building Efficient Data Fetchers by Looking Ahead], the idea is to use
+`DataFetchingEnvironment.getLocalContext()` and `DataFetchingEnvironment.getSource()` to store prefetched data and pass it to the next data fetcher.
+
+== org.hibernate.loader.MultipleBagFetchException: cannot simultaneously fetch multiple bags
+
+- Standard approaches from Vlad Mihalcea and Thorben Janssen include:
+** https://geraldnguyen.medium.com/the-best-way-to-fix-the-hibernates-multiplebagfetchexception-6c63e69a4009[The best way to fix Hibernate’s MultipleBagFetchException] by Gerald Nguyen
+***  https://vladmihalcea.com/hibernate-multiplebagfetchexception/[The best way to fix the Hibernate MultipleBagFetchException] by Vlad Mihalcea
+***  https://vladmihalcea.com/spring-data-jpa-multiplebagfetchexception/[Spring Data JPA MultipleBagFetchException] by Vlad Mihalcea
+** https://thorben-janssen.com/fix-multiplebagfetchexception-hibernate/[Your 2 best options to fix Hibernate’s MultipleBagFetchException] by Thorben Janssen.
+
+- This particular answer https://stackoverflow.com/a/68500159[answer to Fix MultipleBagFetchException], from https://stackoverflow.com/users/4778343/stefan-golubovi%c4%87[Stefan Golubović]
+was very inspiring to me.
+
+- Vlad Mihalcea and Thorben Janssen recommend using queries with a `where` clause such as `where id in (:allEntitiesToBeRepopulatedIds)``, which will generate a long query of
+the form `where id in (?,?,?, ...., ?)`` if there are many entities. In the https://discourse.hibernate.org/t/optimize-left-join-fetch/8280[Optimize left join fetch] question and
+answer, an alternative approach to this query is discussed, using `where id.parent = :parentId`.
+
+=== READING: https://ics.uci.edu/~redmiles/inf233-FQ07/oldpapers/SollowayEhrlich.pdf[Empirical Studies of Programming Knowledge,] by Elliot Soloway, Kate Ehrlich
+
+"expert programmers ... have at least two types of knowledge that" novice programmers "do not."
+
+"- Programming Plans: program fragments that represent stereotypic action sequence in programming, e.g., a RUNNING TOTAL LOOP PLAN,
+an ITEM SEARCH LOOP PLAN.
+- Rules of Programming Discourse: Rules that specify the conventions in programming, e.g., the name of variable should usually agree
+with its function; these rules set up expectations in the minds of programmers about what should be in the program. These rules are
+analogous to discourse rules in conversation."
+
+"In our view, programs are composed from programming plans that have been modified to fit the needs of the specific problem.
+The composition of those plans are governed by rules of programming discourse."
+
+"programs have a dual nature - they can be executed for effect, and they can be read as communicative entities."
+
+"\"Schemas are generic knowledge structures that guide the comprehender's interpretations, inferences, expectations, and attention
+when passages are comprehended[10].\"
+Out notion of programming plan corresponds directly to this notion of schemas."
+
+== READING: https://mortenhertzum.dk/publ/OzCHI2000.pdf[Component-Based Design May Degrade System Usability: Consequences of Software Reuse], by Morten Hertzum
+
+"As the project progressed, the potential usability issues involved in relying on functionally rich components were gradually realized
+and brought up for discussion at several meetings. These issues include:
+
+- Task gap. When a lot of the system functionality is provided by components developed with other use situations in mind, the coupling between the
+system and the users’ task suffers. It becomes more difficult to see through the system and maintain a focus on the actual CSA work.
+Instead, it becomes more likely that the user will have to spend time working out the real-world meaning and consequences of various system
+options and facilities."
+
+"Further, opting for small components will normally mean that many more components are necessary and this in turn means
+that it becomes a task in itself to get to know when an appropriate component is available and which one to choose."
+
+"Users need an intelligible system image that is consistent with their work tasks but they are, instead, likely to get a system image that is
+composed of a set of related but not fully integrated component images. This introduces additional dimensions into an activity the users already experience
+as difficult, and in a certain sense these additional dimensions are foreign to the users’ work. "
+
+"This study shows that when systems are assembled from functionally rich components the users are, instead, likely to get a system image that is composed of a set of
+related but not fully integrated component images. The components incorporate assumptions about the users’ tasks, and because the components have different origins
+these assumptions differ across components. This adds to the complexity of using the system because it is left to the users to bridge the gaps between the components"
+
+== READING: https://bertrandmeyer.com/2022/09/24/introduction-axiomatic-semantics/[Introduction to axiomatic semantics] by Bertrand Meyer
+
+<TO BE READ>
+
+== A course on microservices
+
+Talend API Tester - Free Edition
+https://chromewebstore.google.com/detail/talend-api-tester-free-ed/aejoelaoggembcahagimdiliamlcdmfm?hl=en
+
+=== Error Handling
+
+- The *Whitelabel Error Page* is generated and sent by the `ErrorMvcAutoConfiguration.StaticView.render()` method.
+
+- If we comment out the dependency spring-boot-devtools from pom.xml (build.gradle), the exception stack trace will not be displayed in the browser in case of errors.
+
+=== Internationalization
+
+[source,java]
+----
+Locale locale = LocaleContextHolder.getLocale();
+return messageSource.getMessage("good.morning.message", null, "Default Message", locale);
+----
+
+=== Versioning
+
+- URI versioning - Twitter
+- Request parameter versioning - Amazon
+- (Custom) headers versioning - Microsoft
+- Media type versioning - Github
+
+=== HATEOS
+
+"Hypertext Application Language (HAL) is a convention for defining hypermedia such as links to external resources within JSON or XML code...
+HAL is structured in such a way as to represent elements based on two concepts: Resources and Links."
+(see https://en.wikipedia.org/wiki/Hypertext_Application_Language). E.g.
+
+[source,json]
+----
+{
+  "_links": {
+    "self": {
+      "href": "http://example.com/api/book/hal-cookbook"
+    },
+    "next": {
+      "href": "http://example.com/api/book/hal-case-study"
+    },
+    "prev": {
+      "href": "http://example.com/api/book/json-and-beyond"
+    },
+  ...
+}
+----
+
+=== Filtering
+
+[source,java]
+----
+@JsonFilter("SomeBeanFilter")
+public class SomeBean {
+...
+}
+
+...
+
+MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(someBean);
+mappingJacksonValue.setFilters(...);
+return mappingJacksonValue;
+----
+
+=== Monitoring
+
+http://localhost:8080/actuator/metrics/http.server.requests
+
+=== Configuration
+
+[source,java]
+----
+@ConfigurationProperties("<prefix>")
+public class Configuration {
+  // it exits in properties file as <prefix>.prop1=
+  private String prop1;
+  // it exits in properties file as <prefix>.prop2=
+  private Integer prop2;
+}
+----
+
+=== Eureka server
+
+Allow it some time to warm up, about 30 seconds to 1 minute, before making any requests.
+
+=== spring-cloud-starte-sleuth
+
+[source,java]
+----
+@SpringBootApplication
+public class <AppClass> {
+  public static void main(String... args) {
+    ...
+  }
+
+  @Bean
+  public AlwaysSamples defaultSamples() {
+    return new AlwaysSamples();
+  }
+}
+----
+
+=== spring-cloud-starter-bus-amqp
+
+localhost:8080/bus/refresh
+
+=== spring-cloud-config-server
+
+[source,java]
+spring.profiles.active=dev
+
+vs.
+
+[source,java]
+spring.cloud.config.profile=dev
+
+https://github.com/in28minutes/spring-microservices-v2/blob/main/03.microservices/01-step-by-step-changes/microservices-v2-1.md#debugging-guides[Debugging Guides: Spring Cloud Config Server - Steps 01 to 08]
+
+=== Environment (server.port)
+
+[source,java]
+----
+@Autowired
+private Environment environment;
+
+...
+
+environment.getProperty("local.server.port");
+----
+
+=== Load balancing
+
+The spring-cloud-starter-netflix-eureka-client dependency includes the spring-cloud-starter-loadbalancer dependency.
+
+=== Gateway
+
+spring.cloud.gateway.discovery.locator.enabled=true
+spring.cloud.gateway.discovery.locator.lowerCaseServiceId=true
+
+https://httpbin.org/[A simple HTTP Request & Response Service.]
+
+`LoggingFilter implements GlobalFilter`
+
+=== Docker
+
+[source,shell]
+docker run -p 5000:5000 in28min/todo-rest-api-h2:1.0.0.RELEASE
+
+-p 5000:5000 -> -p {HostPort}:{ContainerPort}
+
+.Run image in detaching mode
+[source,shell]
+docker run -p 5000:5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE
+
+.Log tailing
+[source,shell]
+docker logs -f c9b5
+
+.Image history
+[source,shell]
+docker image history f804
+
+.Image details
+[source,shell]
+docker image inspect f804
+
+.Pause a container
+[source,shell]
+docker container pause 6478
+
+.Restart a container automatically when docker desktop restarts
+[source,shell]
+docker container run -p 5000:5000 -d --restart=always in28min...
+
+[source,shell]
+docker events
+
+[source,shell]
+docker top a6d6
+
+.Mem and CPU usage of runing containers
+[source,shell]
+docker stats
+
+.Container can use up to 512m of memory
+[source,shell]
+docker run ... -m 512m ...
+
+.Container can use up to 100% of cpu
+[source,shell]
+docker run ... --cpu-quota 100000 ...
+
+.What docker manages
+[source,shell]
+docker system df
+
+=== Observability
+
+Observability: How well do we understand what's happening in a system?
+
+Monitoring is a subset of observability. In monitoring we gather data: metric, logs, or traces. In observability we get intelligence from the gathered data.
+
+[source,xml]
+----
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-observation</artifactId>
+</dependency>
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-tracing-bridge-otel</artifactId>
+</dependency>
+<dependency>
+  <groupId>io.opentelemetry</groupId>
+  <artifactId>opentelemetry-exporter-zipkin</artifactId>
+</dependency>
+----
+
+[source,properties]
+----
+management.tracing.sampling.probability=1.0
+logging.pattern.level=%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]
+----
+
+.Feign
+[source,xml]
+----
+<dependency>
+  <groupId>io.github.openfeign</groupId>
+  <artifactId>feign-micrometer</artifactId>
+</dependency>
+----
+
+.RestTemplate
+[source,java]
+----
+@Bean
+public RestTemplate restTemplate(RestTemplateBuilder builder) {
+  return builder.build();
+}
+----
+
+=== Docker image
+
+[source,xml]
+----
+<plugin>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-maven-plugin</artifactId>
+  <configuration>
+    <image>
+      <name>in28min/mmv2-${project.artifactId}:${project.version}</name>
+      <pullPolicy>IF_NOT_PRESENT</pullPolicy>
+    </image>
+  </configuration>
+</plugin>
+----
+
+=== Docker compose
+
+[source,yml]
+----
+version: '3.7'
+
+services:
+  my-service:
+    image: in28min/mmv2-my-service:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8000:8000"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+----
+
+=== Kubernetes
+
+[source,shell]
+----
+kubectl create deployment hello-world-rest-api --image=in28min/...
+kubectl expose deployment hello-world-rest-api --type=LoadBalancer --port==8080
+kubectl scale deployment hello-world-rest-api --replicas=3
+----
+
+=== Google Cloud
+
+[source,shell]
+kubectl get events
+
+[source,shell]
+kubectl get replicaset
+
+[source,shell]
+kubectl get service
+
+A pod is the smallest deployable unit in kubernates. The container is is also a deployable unit,
+but the container is finer and containers reside in pods. A pod is a collection of containers that can run on a host.
+
+[source,shell]
+kubectl get pods -o wide
+
+Each pod has a unique IP address. In the same pod, containers can talk to each over using localhost.
+
+[source,shell]
+kubectl get pods
+
+[source,shell]
+kubectl describe pod <pod_id>
+
+Replicaset ensures that a specific number of pods are running at any given time.
+
+.Statuses of compoennts from master and worker nodes
+[source,shell]
+kubectl get componentstatuses
+
+[source,shell]
+----
+kubectl diff -f deployment.yml
+kubectl apply -f deployment.yml
+----
+
+.Setting env var value
+[source,shell]
+kubectl create configmap <deploymen_id> --from-literal=SERVICE2_URI=http://my-service2
+
+[source,shell]
+kubectl get configmap
+
+[source,shell]
+kubectl rollout undo deployment <deployment_id> --to-revision=1
+
+.In deployment.yml, readiness probe with actuator
+[source,yml]
+----
+  readinessProbe:
+    httpGet:
+      port: 8000
+      path: /actuator/health/readiness
+----
+
+.If CPU usage of a pod is greater tahn 70%, thhan a new pod will be created, maximum 3 pods
+[source,shell]
+kubectl autoscale deployment <deployment_id> --min=1 --max=3 --cpu-percent=70
+
+== Arch Linux
+
+This article, https://next.liquidweb.com/blog/arch-linux-installation-guide/, helped me successfully install Arch Linux on my second attempt.
+
+== Various approaches to Soft Delete, Restore, and Hard Delete in Hibernate
+
+=== @Where + @SQLDelete
+
+In the article https://medium.com/@fhy/my-ultimate-solution-for-soft-delete-with-hibernate-d388b7b8b087[Don't Just LeetCode; Follow the Coding Patterns Instead], the author also
+presents an approach on how to load a soft-deleted entity, specifically how to bypass the `@Where` limitation for soft-deleted entities, which represents
+a combination of `HibernateProxy.extractLazyInitializer` and native SQl query `SELECT * FROM " + tableName + " WHERE id = :id`.
+See https://github.com/fonghuangyee/hibernate-soft-delete/blob/master/src/main/java/com/fhy/spring/hibernate/soft_delete/entity/BaseEntity.java[BaseEntity] class source code.
+
+=== @SoftDelete
+
+In the article https://thorben-janssen.com/permanently-remove-when-using-soft-delete/[Hibernate Tips: Permanently remove records when using soft delete], the author
+writes that using native SQL `DELETE` query we can permanently remove soft-deleted entities.
+Se also https://stackoverflow.com/questions/51877445/how-to-ignore-a-sqldelete-annotation-in-certain-cases[How to ignore a @SQLDelete annotation in certain cases].
+
+https://howtodoinjava.com/hibernate/soft-delete-annotation-example/[Hibernate Soft Delete: @SoftDelete Example].
+
+https://forum.cuba-platform.com/t/how-to-permanently-delete-entity-records-which-had-been-soft-delete/1871/8[How to permanently delete entity records which had been soft delete].
+
+=== Rewriting all underlying queries (i.e. no `@Where` or `@SoftDelete`)
+
+In the article https://codesenior.com/en/tutorial/Truly-Implement-Soft-Delete-in-Spring-Boot-Hibernate[Truly Implement Soft Delete in Spring Boot Hibernate],
+the author presents a solution that adds the `WHERE deleted = false` for all generated queries. Th solution is based on a statement inspector
+
+[source,java]
+----
+@Component
+public class CustomInspector implements StatementInspector {
+  public String inspect(String sql) {
+    ...
+    return sql + conjunction + builder.substring(0, end);
+  }
+  ...
+}
+----
+
+that should subsequently be registered in Hibernate
+
+[source,java]
+----
+@Component
+public class MyInterceptorRegistration implements HibernatePropertiesCustomizer {
+
+    private final CustomInspector customInspector;
+
+    public MyInterceptorRegistration(CustomInspector customInspector) {
+        this.customInspector = customInspector;
+    }
+
+    @Override
+    public void customize(Map<String, Object> hibernateProperties) {
+        hibernateProperties.put("hibernate.session_factory.statement_inspector", customInspector);
+    }
+}
+----
+
+=== With logic on the database layer
+
+In the article https://evilmartians.com/chronicles/soft-deletion-with-postgresql-but-with-logic-on-the-database[Soft deletion with PostgreSQL: but with logic on the database!],
+the author presents a pure database solution consiting of:
+
+1. A rule `_soft_deletion` on DELETE table event that sets the column `deleted = true`:
++
+[source,sql]
+----
+CREATE RULE "_delete_orders" AS ON UPDATE TO users
+  WHERE NOT old.deleted AND new.deleted
+  DO ALSO UPDATE orders SET deleted = true WHERE user_id = old.id;
+----
+
+2. The rule may be disabled via settings, thus obtaining the hard deletion:
++
+[source,sql]
+----
+`ALTER SETTINGS SET rules.soft_deletion TO on`;
+----
++
+[source,sql]
+----
+CREATE OR REPLACE RULE "_soft_deletion"
+  AS ON DELETE TO "orders"
+  WHERE current_setting('rules.soft_deletion') = 'on'
+  DO INSTEAD UPDATE orders SET deleted = true WHERE id = old.id;
+----
+
+https://github.com/pocketbase/pocketbase/discussions/2694[An alternative approach to soft deletion using hooks].
+See also https://brandur.org/fragments/deleted-record-insert[Easy, alternative soft deletion: `deleted_record_insert`].
+In this article, the author has an original idea to create a central trash table, then create trigger on delete for each table,
+that transforms all values of the deleted record to a JSON than inserts this data intro the trash table (in a jsonb column).
+This solution may be extended using the algorithm of gathering all row dependencies for the
+https://medium.com/@shaileshkumarmishra/tracking-data-dependencies-in-postgresql-41a2da91350c[Tracking data dependencies in PostgreSQL] article.
+In this article the main idea is to use table `pg_constraint` and `pg_depend` to track all dependencies.
+
+== READING: https://levelup.gitconnected.com/dont-just-leetcode-follow-the-coding-patterns-instead-4beb6a197fdb[Don’t Just LeetCode; Follow the Coding Patterns Instead] by Arslan
+Ahmad
+indexterm:[reading]
+
+The author has a different categorization system when using LeetCode for training. It's a different approach, but the set of problems is the same.
+Here are first 5 categories from the article:
+
+1. Sliding Window
+2. Islands (Matrix Traversal)
+3. Two Pointers
+4. Fast & Slow Pointers
+5. Merge Intervals
+
+...
+
+The author's idea interests me because his categorization system, compared to the standard structure in data structures and algorithms courses,
+is like two different topologies on the same knowledge space.
+As a specific example, this is similar to my approach to self-learning Spring Boot by doing a series of exercises, where I arranged them in a particular order: https://github.com/Streeling/self-study-exercises/blob/main/exercises.adoc.
+
+== READING: https://betterdev.link/[Better Dev #260]
+indexterm:[reading]
+
+The article https://siddharthsabron.in/blog/ocpp-server/[How Ahrefs Saved US$400M in 3 Years by NOT Going to the Cloud] contains interesting things about:
+WebSocket and ScyllaDB.
+
+Should I attempt to implement https://docs.likejazz.com/llama3.np/[Llama 3 implemented in pure NumPy], in Java, similar to 'GPT-2 in about 150 lines of Java'?
+
+== GraphQL batch loaders in Spring `@SchemaMapping`
+
+[source,java]
+----
+@Configuration
+public class MyConfig {
+
+  public MyConfig(BatchLoaderRegistry registry) {
+       registry.forTypePair(MyEntity.class, String.class).registerMappedBatchLoader((entities, env) -> {
+          Map<MyEntity, String> map = new HashMap();
+          for(MyEntity entity : entities) {
+             map.put(entity, entity.getName());
+          }
+
+//        Mono<Map<MyEntity, String>> childrenMap = Mono.just(m);
+          System.out.println("before Mono CALLING " + Thread.currentThread().getName());
+          Mono<Map<MyEntity, String>> childrenMap = Mono.defer(() -> {
+             System.out.println("CALLING " + Thread.currentThread().getName());
+             return Mono.just(m);
+          });
+
+          return childrenMap;
+       });
+  }
+
+  ...
+}
+----
+
+[source,java]
+----
+public calss MyEntityResolver {
+  @SchemaMapping(typeName = "MyEntity", field = "name")
+  public CompletableFuture<String> getName(MyEntity myEntity, DataLoader<MyEntity, String> loader, DataFetchingEnvironment env) {
+     System.out.println(Thread.currentThread().getName() + " " + env.getExecutionStepInfo().toString());
+     System.out.println(env.getOperationDefinition().getOperation().name() + " " + env.getOperationDefinition().getName() + ": " + myEntity.getName());
+     return loader.load(myEntity);
+  }
+}
+----
+
+Also
+https://stackoverflow.com/questions/76128830/accessing-grandparent-source-of-source-in-spring-for-graphql-schemamapping
+
+== GraphQL: The cache issue with batch loaders
+
+https://github.com/graphql-java/graphql-java/issues/1401
+
+== Minimal GraphQL subscription example
+
+https://www.linkedin.com/pulse/spring-graphql-part-2-subscriptions-mike-lythgoe/[Spring for GraphQL - Part 2 (GraphQL Subscriptions)]
+
+== How methods annotated with `@BatchMapping` are registered as batch loaders
+
+When the application starts, the `org.springframework.graphql.execution.DefaultBatchLoaderRegistry` bean is instantiated and `DefaultBatchLoaderRegistry$DefaultRegistrationSpec`'s
+method `registerMappedBatchLoader()`` is called in a loop for each method annotated with `@BatchMapping`. The batch data loaders are wrapped into `ReactorMappedBatchLoader`
+instances and added to the `mappedLoaders` field of `DefaultBatchLoaderRegistry` bean. This process is done once. During each request, the `registerDataLoaders()` method is called
+from the `DefaultExecutionGraphQlService` bean. This method registers all data loaders from the `mappedLoaders` list to the `graphql.DataLoaderRegistry`.
+
+== Filling the gaps
+
+When I read the documentation of a library (framework, etc.), one thing that hinders my ability to memorize the library's features is the lack of suitable practice examples.
+Only when I encounter a problem with a specific configuration, which can be solved by a particular feature, will my attention be drawn to that feature, allowing my mind to isolate it from the others and memorize it.
+
+In detail: When I read the documentation, almost everything I read falls into one undifferentiated category.
+I may come across good features, but they remain indistinguishable from one another.
+However, if I have a specific need, I might find a feature that can solve my problem.
+This necessity isolates that feature, placing it into a different category.
+I can then see the feature's boundaries, and it no longer blends into the gray mass.
+
+I remember learning in school about the four nucleotide bases that combine in specific ways, like Lego pieces.
+Using this analogy, when I have a need, I quickly find the piece that fits perfectly.
+
+== About pinned java virtual threads
+
+The article https://developers.ascendcorp.com/why-are-my-java-virtual-threads-slower-than-the-platform-threads-74612a1587f3[Why are my Java virtual threads slower than the platform threads?]
+introduces the concept of "thread pinning".
+
+"Pinning describes the condition where a virtual thread, which maps to a platform thread, is stuck to the carrier thread.
+This means that the virtual thread cannot be unmounted from the carrier thread, preventing others from utilizing the same platform thread."
+
+The causes for a virtual thread to be pinned include:
+
+1. A synchronized block or method
+2. A native method
+3. A foreign function
+
+These JVM options can be used to detect problematic (pinned) virtual threads: `-Djdk.tracePinnedThreads=short` or `-Djdk.tracePinnedThreads=full`.
+
+One solution recommended by the author is to "replace synchronized with ReentrantLock".
+For example, in MySQL Connector/J 9.0.0+, synchronized blocks were replaced with ReentrantLocks, which allows virtual threads to perform optimally with database interactions.
+
+== READING: https://medium.com/tech-iiitg/speed-meets-efficiency-decoding-the-power-of-bloom-filters-7c0fa912e16c["Goodbye to Slow Searches: The Bloom Filter Breakthrough!,"] by
+Shambhavi Shandilya
+
+== Very interesting advices for programmers
+
+See https://betterprogramming.pub/advices-from-a-software-engineer-with-8-years-of-experience-8df5111d4d55[Advice From a Software Engineer With 8 Years of Experience,] by Benoit
+Ruiz.
+
+== Very interesting about Java records
+
+See https://mikemybytes.com/2022/02/16/java-records-and-compact-constructors/[Java records & compact constructors,] by Mike Kowalski
+
+== Alternative cache manager for GraphQL data loader's cache
+
+See https://blog.softwaremill.com/graphql-dataloader-in-spring-boot-singleton-or-request-scoped-16699436f680[GraphQL DataLoader in Spring Boot — singleton or request scoped?,] by
+Jaroslaw Kijanowski.
+
+== Code fragments for testing GraphQL subscriptions
+
+[source,java]
+----
+@Autowired
+fun configureGraphQlTester(executionGraphQlService: ExecutionGraphQlService) {
+    val handler = WebGraphQlHandler.builder(executionGraphQlService)
+        .interceptor(WebInterceptor())
+        .build()
+
+    graphQlTester = WebGraphQlTester.builder(handler)
+        .headers { headers -> headers.set("Authorization", "Bearer Toast") }
+        .build()
+}
+----
+
+== All Java and JVM features since JDK 8 to 21
+
+The original article: https://medium.com/@akineralkan/modern-java-an-in-depth-guide-from-version-8-to-21-by-akiner-alkan-f89b50e13c72[Modern Java: An In-Depth Guide from Java 8 to
+Java 21,] by Akiner Alkan.
+
+Also: https://advancedweb.hu/a-categorized-list-of-all-java-and-jvm-features-since-jdk-8-to-21/[A categorized list of all Java and JVM features since JDK 8 to 21,] by Dávid
+Csákvári.
+
+== PRINCE2
+
+An article about how to use Jira with PRINCE2:
+https://www.atlassian.com/software/jira/work-management/product-guide/project-framework#what-are-project-management-frameworks[Project Management Frameworks in Jira Work
+Management].
+
+The book: https://www.amazon.com/PRINCE2%C2%AE-7-Managing-Sucessful-Projects/dp/9925344603[PRINCE2® 7 Managing Sucessful Projects Paperback – September 4, 2023,] be PeopleCert.
+
+== TO READ: https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing[About Pool Sizing,] by Leo Bayer
+
+== The `@NoRepositoryBean` annotation
+
+Using @NoRepositoryBean allows us to minimize code duplication for repositories of entities that inherit from a common entity.
+See https://blog.octalabs.com/simplifying-database-access-with-norepositorybean-cc9c8d8c309a[Simplifying Database Access with @NoRepositoryBean,] by Arsen Sargsyan.
+
+== Docker and MySQL
+
+Interesting thoughts on Docker and stateful applications.
+See https://medium.com/@haiou-a/dont-let-docker-ruin-your-mysql-f36e842a4ce0[Don’t Let Docker Ruin Your MySQL!,] by Oliver Foster.
+
+[index]
+== Index
